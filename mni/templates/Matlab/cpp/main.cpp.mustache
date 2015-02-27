@@ -14,11 +14,9 @@
     {{#namespaces}}
         {{>dispatchEnumNamespace}}
     {{/namespaces}}
-    {{#classes}}
-        {{#methods}}
+    {{#classes.methods.parameters}}
             {{= out << context.getValue("USR") << ",\n";}}
-        {{/methods}}
-    {{/classes}}
+    {{/classes.methods}}
 {{/dispatchEnumNamespace}}
 
 enum DispatchEnum{

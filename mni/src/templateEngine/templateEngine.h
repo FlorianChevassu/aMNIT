@@ -11,6 +11,9 @@
 #include <boost/filesystem.hpp>
 
 
+#include "../tools/stringUtils.h"
+
+
 #include "scriptEngine.h"
 #include "../model/model.h"
 #include <chaiscript/utility/utility.hpp>
@@ -50,7 +53,9 @@ namespace mni {
 			using namespace boost::filesystem;
 			path p = m_templatePath;
 			p.append(fileName.begin(), fileName.end());
-			if(exists(p)) {
+			if(!exists(p)) {
+				throw std::runtime_error("The file does not exist.");
+			}
 				std::ifstream ifs;
 				ifs.open(p.string());
 				if(m_compilingTemplates.find(fileName) == m_compilingTemplates.end()) {
@@ -59,9 +64,7 @@ namespace mni {
 					m_compiledTemplates[fileName] = res;
 				}
 				return m_compiledTemplates[fileName];
-			} else {
-				std::cout << "BAD FILE : " << fileName << std::endl;
-			}
+
 		}
 
 		std::string extractText(std::istream& is){
@@ -142,15 +145,24 @@ namespace mni {
 			std::string key = tags[0].substr(1);
 			tags.pop_front();
 
-			Node res(NodeType::section, key, tags);
+			//if key contains points ('.'), split it into multiple sections
+			std::vector<std::string> sections = mni::tools::split(key, '.');
+
+			//Node res(NodeType::section, sections[0], tags);
+			std::list<Node> res;
+			std::list<Node>* currentNodeList = &res;
+			for(auto sec : sections) {
+				currentNodeList->push_back({NodeType::section, sec});
+				currentNodeList->push_back({NodeType::endScope, sec});
+				currentNodeList = &(currentNodeList->front().children);
+			}
 
 			//compile the stream until the end of section tag has been found
-			res.children = compile(is, key);
+			*currentNodeList = compile(is, sections.back());
 
 			//The last node is the "endScope" node. It should be at the same level as the "section" node.
-			Node res2 = res.children.back();
-			res.children.pop_back();
-			return {res, res2};
+			currentNodeList->pop_back();
+			return res;
 		}
 
 		Node compileStartScopeNode(const std::string node, std::istream& is){
