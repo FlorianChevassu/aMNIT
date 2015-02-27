@@ -1,7 +1,6 @@
 #include <chaiscript/chaiscript.hpp>
 #include <chaiscript/chaiscript_stdlib.hpp>
 #include "scriptEngine.h"
-#include <chrono>
 #include <regex>
 
 
@@ -20,19 +19,32 @@ namespace mni{
 			return os << time.substr(0, time.length()-1);
 		}
 
-
 		std::time_t getDate() {
 			return std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 		}
 
-//		const std::string& toIdentifierString(const std::string& s){
-//			return std::regex_replace(s, "[0-9a-fA-F]", "[$&]");
-//		}
+		std::string toIdentifier(std::string s) {
+			auto pred = [](auto& c) {
+				return c != '_' && !std::isalnum(c);
+			};
+			auto index = std::find_if(s.begin(), s.end(), pred);
+			while(index != s.end()) {
+				*index = '_';
+				index = std::find_if(s.begin(), s.end(), pred);
+			}
+
+			//first character must be either '_' or a letter
+			if(s[0] != '_' && !std::isalpha(s[0]))
+				s[0] = '_';
+
+			return s;
+		}
 
 		ScriptEngine::ScriptEngine() : ChaiScript(chaiscript::Std_Lib::library()){
 			add(chaiscript::fun(&print_ostream<std::string>), "<<");
 			add(chaiscript::fun(&print_ostream<std::time_t>), "<<");
 			add(chaiscript::fun(&getDate), "getDate");
+			add(chaiscript::fun(&toIdentifier), "toIdentifier");
 		}
 	}
 }
