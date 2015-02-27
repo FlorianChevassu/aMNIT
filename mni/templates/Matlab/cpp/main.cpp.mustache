@@ -1,0 +1,32 @@
+/****************************************************/
+/*    WARNING : AUTO-GENERATED FILE. DO NOT EDIT    */
+/*       {{= out << "Generated on "
+                 << getDate();}}       */
+/****************************************************/
+
+#include "mex.h"
+#include "serializationUtils.h"
+
+{{!= var class_name;}}
+
+{{! Partial used to generate the dispatch enum }}
+{{<dispatchEnumNamespace skipText}}
+    {{#namespaces}}
+        {{>dispatchEnumNamespace}}
+    {{/namespaces}}
+    {{#classes}}
+        {{#methods}}
+            {{= out << context.getValue("USR") << ",\n";}}
+        {{/methods}}
+    {{/classes}}
+{{/dispatchEnumNamespace}}
+
+enum DispatchEnum{
+{{>dispatchEnumNamespace}}
+}
+
+{{\ skipText}}
+void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
+
+}
+{{/}}
