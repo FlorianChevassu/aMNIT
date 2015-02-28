@@ -1,5 +1,4 @@
-#ifndef _MODEL_PARAMETER_
-#define _MODEL_PARAMETER_
+#pragma once
 
 #include <string>
 #include <list>
@@ -36,4 +35,3 @@ namespace CMG {
 		Type m_type;
 	};
 }
-#endif

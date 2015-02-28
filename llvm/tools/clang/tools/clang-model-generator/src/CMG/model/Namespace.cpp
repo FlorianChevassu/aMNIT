@@ -28,6 +28,10 @@ namespace CMG {
 		return m_classes;
 	}
 
+	const std::list<Function>& Namespace::getFunctions() const {
+		return m_functions;
+	}
+
 	const std::list<Namespace>& Namespace::getNamespaces() const {
 		return m_namespaces;
 	}

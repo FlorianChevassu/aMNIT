@@ -26,7 +26,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
     int eFunc;
     convert_from_matlab(prhs[0], eFunc);
 
-
     std::int64 thisPtr;
     convert_from_matlab(prhs[1], thisPtr);
 
@@ -42,6 +41,12 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
                     mexPrintf("{{= out << toIdentifier(context.getValue("USR")); }}\\n");
                     break;
             {{/classes.methods}}
+
+            {{#functions !skipText}}
+                case {{= out << toIdentifier(context.getValue("USR"));}} :
+                    mexPrintf("{{= out << toIdentifier(context.getValue("USR")); }}\\n");
+                    break;
+            {{/functions}}
         {{/dispatchEnumNamespace}}
 
         {{>switchContent}}

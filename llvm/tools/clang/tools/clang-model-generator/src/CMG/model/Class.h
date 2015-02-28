@@ -1,5 +1,4 @@
-#ifndef _MODEL_CLASS_
-#define _MODEL_CLASS_
+#pragma once
 
 #include <string>
 #include <memory>
@@ -48,4 +47,3 @@ namespace CMG {
 		std::list<Method> m_methods;
 	};
 }
-#endif

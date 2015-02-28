@@ -1,6 +1,4 @@
-#ifndef _MODEL_MODEL_
-#define _MODEL_MODEL_
-
+#pragma once
 
 #include <map>
 #include <memory>
@@ -12,6 +10,8 @@ namespace CMG {
 	class Class;
 
 	class Method;
+
+	class Function;
 
 	class Namespace;
 
@@ -50,6 +50,8 @@ namespace CMG {
 
 		void addMethod(const std::string& usr, Method* method);
 
+		void addFunction(const std::string& usr, Function* function);
+
 		void addNamespace(const std::string& usr, Namespace* ns);
 
 		void addParameter(const std::string& usr, Parameter* p);
@@ -65,9 +67,9 @@ namespace CMG {
 		std::unique_ptr<Namespace> m_globalNamespace;
 		std::map<std::string, Class*> m_classMap;
 		std::map<std::string, Method*> m_methodMap;
+		std::map<std::string, Function*> m_functionMap;
 		std::map<std::string, Namespace*> m_namespaceMap;
 		std::map<std::string, Parameter*> m_parameterMap;
 		std::map<std::string, Type*> m_typeMap;
 	};
 }
-#endif

@@ -15,6 +15,7 @@ namespace mni {
 			const CMG::Namespace* m_namespace;
 			const CMG::Class* m_class;
 			const CMG::Method* m_method;
+			const CMG::Function* m_function;
 			const CMG::Parameter* m_parameter;
 			const CMG::Type* m_type;
 		};
@@ -22,6 +23,7 @@ namespace mni {
 			NAMESPACE,
 			CLASS,
 			METHOD,
+			FUNCTION,
 			PARAMETER,
 			TYPE
 		} m_contextType;
@@ -34,6 +36,8 @@ namespace mni {
 
 		ModelContext(const CMG::Method& val, const ModelContext* parent = nullptr);
 
+		ModelContext(const CMG::Function& val, const ModelContext* parent = nullptr);
+
 		ModelContext(const CMG::Parameter& val, const ModelContext* parent = nullptr);
 
 		ModelContext(const CMG::Type& val, const ModelContext* parent = nullptr);
@@ -41,6 +45,7 @@ namespace mni {
 		std::string getValue(const std::string& variableName) const;
 
 		std::list<ModelContext> getSectionItems(const std::string& sectionName) const;
+
 		const ModelContext* getParentContext() const;
 	};
 }

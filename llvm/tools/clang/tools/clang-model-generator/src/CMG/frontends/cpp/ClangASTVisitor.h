@@ -25,14 +25,15 @@ namespace CMG {
 	public:
 		ClangASTVisitor(clang::SourceManager& sourceMgr, CMG::Model& m);
 
-		/*
-		Visit, create and add namespaces to the model.
-		*/
 		bool VisitNamespaceDecl(clang::NamespaceDecl* ns);
 
 		bool VisitCXXRecordDecl(clang::CXXRecordDecl* c);
 
+		bool VisitCXXMethodDecl(clang::CXXMethodDecl* c);
+
 		bool VisitFunctionDecl(clang::FunctionDecl* c);
+
+		bool VisitCXXConstructorDecl(clang::CXXConstructorDecl* c);
 
 		bool VisitParmVarDecl(clang::ParmVarDecl* d);
 

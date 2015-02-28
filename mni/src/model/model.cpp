@@ -17,6 +17,10 @@ namespace mni {
 			: m_method(&val), m_contextType(METHOD), m_parentContext(parent) {
 	}
 
+	ModelContext::ModelContext(const CMG::Function& val, const ModelContext* parent)
+			: m_function(&val), m_contextType(FUNCTION), m_parentContext(parent) {
+	}
+
 	ModelContext::ModelContext(const CMG::Parameter& val, const ModelContext* parent)
 			: m_parameter(&val), m_contextType(PARAMETER), m_parentContext(parent) {
 	}
@@ -65,6 +69,15 @@ namespace mni {
 					return m_method->getUSR();
 				}
 				break;
+			case FUNCTION:
+				if(variableName.compare("name") == 0) {
+					return m_function->getName();
+				} else if(variableName.compare("returnType") == 0) {
+					return m_function->getReturnType().getName();
+				} else if(variableName.compare("USR") == 0) {
+					return m_function->getUSR();
+				}
+				break;
 			case PARAMETER:
 				if(variableName.compare("name") == 0) {
 					return m_parameter->getName();
@@ -95,6 +108,10 @@ namespace mni {
 				} else if(variableName.compare("classes") == 0) {
 					std::for_each(m_namespace->getClasses().begin(), m_namespace->getClasses().end(), [&](const CMG::Class& c) {
 						res.emplace_back(c, this);
+					});
+				} else if(variableName.compare("functions") == 0) {
+					std::for_each(m_namespace->getFunctions().begin(), m_namespace->getFunctions().end(), [&](const CMG::Function& f) {
+						res.emplace_back(f, this);
 					});
 				}
 				break;

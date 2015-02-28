@@ -1,13 +1,8 @@
 #include "CMG/model/Model.h"
 
-#include <exception>
-#include <memory>
-
 #include "CMG/model/Class.h"
-#include "CMG/model/Method.h"
+#include "CMG/model/Function.h"
 #include "CMG/model/Namespace.h"
-#include "CMG/model/Parameter.h"
-#include "CMG/model/Type.h"
 
 namespace CMG {
 
@@ -126,6 +121,15 @@ namespace CMG {
 		}
 
 		m_methodMap[usr] = method;
+	}
+
+	void Model::addFunction(const std::string& usr, Function* method) {
+		auto it = m_functionMap.find(usr);
+		if(it != m_functionMap.end()) {
+			//throw std::runtime_error("method with USR \"" + usr + "\" already exists.");
+		}
+
+		m_functionMap[usr] = method;
 	}
 
 	void Model::addNamespace(const std::string& usr, Namespace* ns) {

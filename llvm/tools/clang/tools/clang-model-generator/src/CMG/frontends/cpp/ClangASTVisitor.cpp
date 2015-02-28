@@ -1,5 +1,4 @@
 #include "CMG/frontends/cpp/ClangASTVisitor.h"
-#include "../../../../../libclang/Index_Internal.h"
 
 
 namespace CMG {
@@ -83,72 +82,97 @@ namespace CMG {
 		return true;
 	}
 
-	bool ClangASTVisitor::VisitFunctionDecl(clang::FunctionDecl* c) {
-		//check that it is a Class member
-		if(c->isCXXClassMember()) {
-			clang::CXXMethodDecl* methodDecl = llvm::dyn_cast<clang::CXXMethodDecl>(c);
-			clang::DeclContext* parent = c->getParent();
+	bool ClangASTVisitor::VisitCXXConstructorDecl(clang::CXXConstructorDecl* c) {
+		clang::DeclContext* parent = c->getParent();
+		std::string ctorUSR = ClangUtils::generateUSRForDecl(c);
 
-			std::string methodName = c->getNameAsString();
-			std::string methodUSR = ClangUtils::generateUSRForDecl(c);
-			std::string classUSR;
+		std::string classUSR;
 
-			CMG::Class* theClass;
-			CMG::Method* theMethod;
-			if(parent->isRecord()) {
-				clang::CXXRecordDecl* parentRecordDecl = llvm::dyn_cast<clang::CXXRecordDecl>(parent);
-				classUSR = ClangUtils::generateUSRForDecl(parentRecordDecl);
+		CMG::Class* theClass;
+		CMG::Method* theCtor;
 
-				theClass = m_model.getClass(classUSR);
-				theMethod = theClass->addMethod(methodUSR);
-				theMethod->setName(methodName);
-			}
-			else {
-				//TODO error
-			}
+		clang::CXXRecordDecl* parentRecordDecl = llvm::dyn_cast<clang::CXXRecordDecl>(parent);
+		classUSR = ClangUtils::generateUSRForDecl(parentRecordDecl);
 
-			/*
-			Retrieve the access specifier for the class
-			*/
-			clang::AccessSpecifier accSpec = c->getAccess();
-			switch(accSpec) {
-				case clang::AS_public:
-					theMethod->setAccessSpecifier(CMG::AS_public);
-					break;
-				case clang::AS_protected:
-					theMethod->setAccessSpecifier(CMG::AS_protected);
-					break;
-				case clang::AS_private:
-					theMethod->setAccessSpecifier(CMG::AS_private);
-					break;
-				case clang::AS_none:
-					//TODO throw ?
-					break;
-			}
+		theClass = m_model.getClass(classUSR);
+		theCtor = theClass->addMethod(ctorUSR);
+		theCtor->setAccessSpecifier(ClangUtils::getAccessSpecifier(c));
+		theCtor->setConstructor(true);
 
-			theMethod->setConst(methodDecl->isConst());
-			theMethod->setStatic(methodDecl->isStatic());
+		return true;
+	}
 
+	bool ClangASTVisitor::VisitCXXMethodDecl(clang::CXXMethodDecl* c) {
+		clang::DeclContext* parent = c->getParent();
 
-			CMG::Type& theReturnType = theMethod->getReturnType();
-			theReturnType.setName(methodDecl->getReturnType().getUnqualifiedType().getAsString());
-			theReturnType.setConst(methodDecl->getReturnType().isConstQualified());
-			theReturnType.setPointer(methodDecl->getReturnType().getTypePtr()->isPointerType());
-			theReturnType.setReference(methodDecl->getReturnType().getTypePtr()->isReferenceType());
-			if(theReturnType.isReference()) {
-				theReturnType.setConst(methodDecl->getReturnType().getTypePtr()->getPointeeType().isConstQualified());
-			}
-			else {
-				theReturnType.setConst(methodDecl->getReturnType().isConstQualified());
-			}
+		std::string methodName = c->getNameAsString();
+		std::string methodUSR = ClangUtils::generateUSRForDecl(c);
+		std::string classUSR;
 
-			return true;
+		CMG::Class* theClass;
+		CMG::Method* theMethod;
+		if(parent->isRecord()) {
+			clang::CXXRecordDecl* parentRecordDecl = llvm::dyn_cast<clang::CXXRecordDecl>(parent);
+			classUSR = ClangUtils::generateUSRForDecl(parentRecordDecl);
+
+			theClass = m_model.getClass(classUSR);
+			theMethod = theClass->addMethod(methodUSR);
+			theMethod->setName(methodName);
 		}
 		else {
-			//TODO
-			//It is a function
-			//std::cout << std::string(ClangUtils::generateUSRForDecl(c)) << std::endl;
+			//TODO error
 		}
+
+
+		theMethod->setAccessSpecifier(ClangUtils::getAccessSpecifier(c));
+		theMethod->setConst(c->isConst());
+		theMethod->setStatic(c->isStatic());
+
+
+		CMG::Type& theReturnType = theMethod->getReturnType();
+		theReturnType.setName(c->getReturnType().getUnqualifiedType().getAsString());
+		theReturnType.setConst(c->getReturnType().isConstQualified());
+		theReturnType.setPointer(c->getReturnType().getTypePtr()->isPointerType());
+		theReturnType.setReference(c->getReturnType().getTypePtr()->isReferenceType());
+		if(theReturnType.isReference()) {
+			theReturnType.setConst(c->getReturnType().getTypePtr()->getPointeeType().isConstQualified());
+		}
+		else {
+			theReturnType.setConst(c->getReturnType().isConstQualified());
+		}
+
+		return true;
+	}
+
+	bool ClangASTVisitor::VisitFunctionDecl(clang::FunctionDecl* c) {
+		clang::DeclContext* parent = c->getParent();
+
+		std::string fctName = c->getNameAsString();
+		std::string fctUSR = ClangUtils::generateUSRForDecl(c);
+
+		CMG::Namespace* theNamespace;
+		CMG::Function* theFunction;
+		if(parent->isNamespace()) {
+			theNamespace = m_model.getNamespace(ClangUtils::generateUSRForDecl(llvm::dyn_cast<clang::Decl>(parent)));
+		}
+		else {
+			theNamespace = m_model.getGlobalNamespace();
+		}
+
+
+		theFunction = theNamespace->addFunction(fctUSR);
+		CMG::Type& theReturnType = theFunction->getReturnType();
+		theReturnType.setName(c->getReturnType().getUnqualifiedType().getAsString());
+		theReturnType.setConst(c->getReturnType().isConstQualified());
+		theReturnType.setPointer(c->getReturnType().getTypePtr()->isPointerType());
+		theReturnType.setReference(c->getReturnType().getTypePtr()->isReferenceType());
+		if(theReturnType.isReference()) {
+			theReturnType.setConst(c->getReturnType().getTypePtr()->getPointeeType().isConstQualified());
+		}
+		else {
+			theReturnType.setConst(c->getReturnType().isConstQualified());
+		}
+
 		return true;
 	}
 

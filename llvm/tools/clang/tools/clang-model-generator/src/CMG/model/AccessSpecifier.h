@@ -1,6 +1,4 @@
-#ifndef _MODEL_ACCESS_SPECIFIER_H_
-#define _MODEL_ACCESS_SPECIFIER_H_
-
+#pragma once
 
 namespace CMG {
 	enum AccessSpecifier {
@@ -10,4 +8,3 @@ namespace CMG {
 	};
 }
 
-#endif

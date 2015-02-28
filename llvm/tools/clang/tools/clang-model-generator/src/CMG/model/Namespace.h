@@ -1,5 +1,4 @@
-#ifndef _MODEL_NAMESPACE_
-#define _MODEL_NAMESPACE_
+#pragma once
 
 #include <string>
 #include <memory>
@@ -7,8 +6,9 @@
 
 
 #include "API.h"
-#include "CMG/model/Class.h"
 #include "CMG/model/Model.h"
+#include "CMG/model/Class.h"
+#include "CMG/model/Function.h"
 
 namespace CMG {
 
@@ -35,6 +35,15 @@ namespace CMG {
 			return &m_classes.back();
 		}
 
+		CMG_API const std::list<Function>& getFunctions() const;
+
+		template<typename... T>
+		Function* addFunction(const std::string& usr, T... params) {
+			m_functions.emplace_back(m_model, usr, params...);
+			m_model.addFunction(usr, &m_functions.back());
+			return &m_functions.back();
+		}
+
 		CMG_API const std::list<Namespace>& getNamespaces() const;
 
 		template<typename... T>
@@ -49,7 +58,7 @@ namespace CMG {
 		std::string m_usr;
 		std::string m_name;
 		std::list<Class> m_classes;
+		std::list<Function> m_functions;
 		std::list<Namespace> m_namespaces;
 	};
 }
-#endif

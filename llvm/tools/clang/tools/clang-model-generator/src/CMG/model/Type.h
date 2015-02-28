@@ -1,6 +1,4 @@
-#ifndef _MODEL_TYPE_
-#define _MODEL_TYPE_
-
+#pragma once
 
 #include <memory>
 #include <string>
@@ -40,4 +38,3 @@ namespace CMG {
 		std::string m_name;
 	};
 }
-#endif

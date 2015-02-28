@@ -7,17 +7,16 @@
 
 
 #include "API.h"
-#include "CMG/model/AccessSpecifier.h"
 #include "CMG/model/Parameter.h"
 #include "CMG/model/Model.h"
 
 namespace CMG {
 
-	class Method {
+	class Function {
 	public:
-		Method(Model& m, const std::string& usr);
+		Function(Model& m, const std::string& usr);
 
-		~Method();
+		~Function();
 
 		CMG_API const std::string& getName() const;
 
@@ -26,26 +25,6 @@ namespace CMG {
 		CMG_API const std::string& getUSR() const;
 
 		void setUSR(const std::string& usr);
-
-		CMG_API bool isFinal() const;
-
-		void setFinal(bool f);
-
-		CMG_API bool isStatic() const;
-
-		void setStatic(bool f);
-
-		CMG_API bool isConst() const;
-
-		void setConst(bool f);
-
-		CMG_API bool isPure() const;
-
-		void setPure(bool f);
-
-		CMG_API AccessSpecifier getAccessSpecifier() const;
-
-		void setAccessSpecifier(AccessSpecifier as);
 
 		CMG_API const std::list<Parameter>& getParameters() const;
 
@@ -56,35 +35,19 @@ namespace CMG {
 			return &m_parameters.back();
 		}
 
-		Type& getReturnType(){
+		Type& getReturnType() {
 			return m_returnType;
 		}
 
-		const Type& getReturnType() const{
+		const Type& getReturnType() const {
 			return m_returnType;
 		}
-
-		CMG_API bool isConstructor() const;
-
-		void setConstructor(bool f);
-
-		CMG_API bool isDestructor() const;
-
-		void setDestructor(bool f);
 
 
 	private:
 		Model& m_model;
 		std::string m_name;
 		std::string m_usr;
-		bool m_isFinal;
-		bool m_isStatic;
-		bool m_isConst;
-		bool m_isPure;
-		bool m_isCtor;
-		bool m_isDtor;
-
-		AccessSpecifier m_accessSpecifier;
 
 		std::list<Parameter> m_parameters;
 		Type m_returnType;

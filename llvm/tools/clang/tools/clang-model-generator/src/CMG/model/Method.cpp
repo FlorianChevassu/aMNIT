@@ -2,7 +2,7 @@
 
 namespace CMG {
 
-	Method::Method(Model& m, const std::string& usr) : m_model(m), m_usr(usr) {
+	Method::Method(Model& m, const std::string& usr) : m_model(m), m_usr(usr), m_isCtor(false), m_isDtor(false) {
 	}
 
 	Method::~Method() {
@@ -66,5 +66,21 @@ namespace CMG {
 
 	const std::list<Parameter>& Method::getParameters() const {
 		return m_parameters;
+	}
+
+	bool Method::isConstructor() const {
+		return m_isCtor;
+	}
+
+	void Method::setConstructor(bool f) {
+		m_isCtor = f;
+	}
+
+	bool Method::isDestructor() const {
+		return m_isDtor;
+	}
+
+	void Method::setDestructor(bool f) {
+		m_isDtor = f;
 	}
 }
