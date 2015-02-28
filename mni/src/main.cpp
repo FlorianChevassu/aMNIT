@@ -6,8 +6,8 @@
 
 #include "templateEngine/templateEngine.h"
 
-#include "CMG/model/Namespace.h"
-#include "model/model.h"
+
+#include <boost/filesystem/fstream.hpp>
 
 int main() {
 	std::unique_ptr<CMG::Frontend, decltype(&CMG::destroyFrontend)> f(CMG::getFrontend(), &CMG::destroyFrontend);
@@ -25,6 +25,9 @@ int main() {
 	te.registerContext<mni::ModelContext>();
 	std::list<mni::Node> nodes = te.compile("main.cpp.mustache");
 
+	//boost::filesystem::ofstream result("/home/florian/dev/MNI/workspace/mni/templates/Matlab/cpp/main.cpp");
+
+	//te.render<mni::ModelContext>(mni::ModelContext(ns), result, nodes);
 	te.render<mni::ModelContext>(mni::ModelContext(ns), std::cout, nodes);
 
 

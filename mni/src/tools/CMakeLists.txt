@@ -1,3 +1,4 @@
 set(SRC_LIST ${SRC_LIST}
 ${CMAKE_CURRENT_SOURCE_DIR}/stringUtils.h;
+${CMAKE_CURRENT_SOURCE_DIR}/stringUtils.cpp;
 PARENT_SCOPE)

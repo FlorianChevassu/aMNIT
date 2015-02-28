@@ -5,25 +5,45 @@
 /****************************************************/
 
 #include "mex.h"
-#include "serializationUtils.h"
-
-{{!= var class_name;}}
+#include "convert.h"
 
 {{! Partial used to generate the dispatch enum }}
 {{<dispatchEnumNamespace skipText}}
     {{#namespaces}}
         {{>dispatchEnumNamespace}}
     {{/namespaces}}
-    {{#classes.methods.parameters}}
-            {{= out << context.getValue("USR") << ",\n";}}
+    {{#classes.methods}}
             {{= out << toIdentifier(context.getValue("USR")) << ",\n";}}
     {{/classes.methods}}
 {{/dispatchEnumNamespace}}
 
 enum DispatchEnum{
 {{>dispatchEnumNamespace}}
-}
+};
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
+    //the first parameter is the enum value corresponding to the function/method to call.
+    int eFunc;
+    convert_from_matlab(prhs[0], eFunc);
 
+
+    std::int64 thisPtr;
+    convert_from_matlab(prhs[1], thisPtr);
+
+    switch(eFunc){
+        {{! Partial used to generate the switch }}
+        {{<switchContent skipText}}
+            {{#namespaces}}
+                {{>switchContent}}
+            {{/namespaces}}
+            {{#classes.methods !skipText}}
+                case {{= out << toIdentifier(context.getValue("USR"));}} :
+                    {{= out << context.getParentContext().getValue("fullName");}}* tmp(thisPtr);
+                    mexPrintf("{{= out << toIdentifier(context.getValue("USR")); }}\\n");
+                    break;
+            {{/classes.methods}}
+        {{/dispatchEnumNamespace}}
+
+        {{>switchContent}}
+    }
 }
