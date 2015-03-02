@@ -14,6 +14,8 @@ namespace CMG {
 	public:
 		Parameter(Model& m, const std::string& usr);
 
+		Parameter& operator=(const Parameter& rhs) = default;
+
 		~Parameter();
 
 		CMG_API const std::string& getName() const;
@@ -29,7 +31,7 @@ namespace CMG {
 		CMG_API const Type& getType() const;
 
 	private:
-		Model& m_model;
+		Model* m_model;
 		std::string m_usr;
 		std::string m_name;
 		Type m_type;

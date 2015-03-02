@@ -43,6 +43,7 @@ namespace mni{
 		ScriptEngine::ScriptEngine() : ChaiScript(chaiscript::Std_Lib::library()){
 			add(chaiscript::fun(&print_ostream<std::string>), "<<");
 			add(chaiscript::fun(&print_ostream<std::time_t>), "<<");
+			add(chaiscript::fun(&print_ostream<std::size_t>), "<<");
 			add(chaiscript::fun(&getDate), "getDate");
 			add(chaiscript::fun(&toIdentifier), "toIdentifier");
 		}

@@ -39,12 +39,33 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
                 case {{= out << toIdentifier(context.getValue("USR"));}} :
                     {{= out << context.getParentContext().getValue("fullName");}}* tmp(thisPtr);
                     mexPrintf("{{= out << toIdentifier(context.getValue("USR")); }}\\n");
+                     mexPrintf("{{=
+                                        {
+                                            var params = context.getMethod().getParameters();
+                                            var paramsSize = params.size();
+                                            out << paramsSize;
+                                            for(var i=0; i<paramsSize; ++i)
+                                            {
+                                                out << params[i].getName();
+                                            }
+                                        }
+                                        }}\\n");
                     break;
             {{/classes.methods}}
 
             {{#functions !skipText}}
                 case {{= out << toIdentifier(context.getValue("USR"));}} :
-                    mexPrintf("{{= out << toIdentifier(context.getValue("USR")); }}\\n");
+                    mexPrintf("{{=
+                    {
+                        var params = context.getFunction().getParameters();
+                        var paramsSize = params.size();
+                        out << paramsSize;
+                        for(var i=0; i<paramsSize; ++i)
+                        {
+                            out << params[i].getName();
+                        }
+                    }
+                    }}\\n");
                     break;
             {{/functions}}
         {{/dispatchEnumNamespace}}

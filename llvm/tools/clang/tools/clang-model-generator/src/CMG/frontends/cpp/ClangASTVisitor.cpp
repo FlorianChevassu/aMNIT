@@ -145,34 +145,35 @@ namespace CMG {
 	}
 
 	bool ClangASTVisitor::VisitFunctionDecl(clang::FunctionDecl* c) {
-		clang::DeclContext* parent = c->getParent();
+		if(!c->isCXXClassMember()) {
+			clang::DeclContext* parent = c->getParent();
 
-		std::string fctName = c->getNameAsString();
-		std::string fctUSR = ClangUtils::generateUSRForDecl(c);
+			std::string fctName = c->getNameAsString();
+			std::string fctUSR = ClangUtils::generateUSRForDecl(c);
 
-		CMG::Namespace* theNamespace;
-		CMG::Function* theFunction;
-		if(parent->isNamespace()) {
-			theNamespace = m_model.getNamespace(ClangUtils::generateUSRForDecl(llvm::dyn_cast<clang::Decl>(parent)));
-		}
-		else {
-			theNamespace = m_model.getGlobalNamespace();
-		}
+			CMG::Namespace* theNamespace;
+			CMG::Function* theFunction;
+			if(parent->isNamespace()) {
+				theNamespace = m_model.getNamespace(ClangUtils::generateUSRForDecl(llvm::dyn_cast<clang::Decl>(parent)));
+			}
+			else {
+				theNamespace = m_model.getGlobalNamespace();
+			}
 
 
-		theFunction = theNamespace->addFunction(fctUSR);
-		CMG::Type& theReturnType = theFunction->getReturnType();
-		theReturnType.setName(c->getReturnType().getUnqualifiedType().getAsString());
-		theReturnType.setConst(c->getReturnType().isConstQualified());
-		theReturnType.setPointer(c->getReturnType().getTypePtr()->isPointerType());
-		theReturnType.setReference(c->getReturnType().getTypePtr()->isReferenceType());
-		if(theReturnType.isReference()) {
-			theReturnType.setConst(c->getReturnType().getTypePtr()->getPointeeType().isConstQualified());
-		}
-		else {
+			theFunction = theNamespace->addFunction(fctUSR);
+			CMG::Type& theReturnType = theFunction->getReturnType();
+			theReturnType.setName(c->getReturnType().getUnqualifiedType().getAsString());
 			theReturnType.setConst(c->getReturnType().isConstQualified());
+			theReturnType.setPointer(c->getReturnType().getTypePtr()->isPointerType());
+			theReturnType.setReference(c->getReturnType().getTypePtr()->isReferenceType());
+			if(theReturnType.isReference()) {
+				theReturnType.setConst(c->getReturnType().getTypePtr()->getPointeeType().isConstQualified());
+			}
+			else {
+				theReturnType.setConst(c->getReturnType().isConstQualified());
+			}
 		}
-
 		return true;
 	}
 

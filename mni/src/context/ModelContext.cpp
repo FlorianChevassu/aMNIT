@@ -1,4 +1,4 @@
-#include "model.h"
+#include "ModelContext.h"
 
 #include <sstream>
 #include <algorithm>
@@ -141,5 +141,42 @@ namespace mni {
 
 	const ModelContext* ModelContext::getParentContext() const {
 		return m_parentContext;
+	}
+
+
+	const CMG::Namespace& ModelContext::getNamespace() const {
+		if(m_contextType != NAMESPACE)
+			throw std::runtime_error("Context is not of type Namespace.");
+		return *m_namespace;
+	}
+
+	const CMG::Class& ModelContext::getClass() const {
+		if(m_contextType != CLASS)
+			throw std::runtime_error("Context is not of type Class.");
+		return *m_class;
+	}
+
+	const CMG::Method& ModelContext::getMethod() const {
+		if(m_contextType != METHOD)
+			throw std::runtime_error("Context is not of type Method.");
+		return *m_method;
+	}
+
+	const CMG::Function& ModelContext::getFunction() const {
+		if(m_contextType != FUNCTION)
+			throw std::runtime_error("Context is not of type Function.");
+		return *m_function;
+	}
+
+	const CMG::Parameter& ModelContext::getParameter() const {
+		if(m_contextType != PARAMETER)
+			throw std::runtime_error("Context is not of type Parameter.");
+		return *m_parameter;
+	}
+
+	const CMG::Type& ModelContext::getType() const {
+		if(m_contextType != TYPE)
+			throw std::runtime_error("Context is not of type Type.");
+		return *m_type;
 	}
 }

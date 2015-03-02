@@ -2,7 +2,7 @@
 
 namespace CMG {
 
-	Namespace::Namespace(Model& m, const std::string& usr) : m_model(m), m_usr(usr) {
+	Namespace::Namespace(Model& m, const std::string& usr) : m_model(&m), m_usr(usr) {
 	}
 
 	Namespace::~Namespace() {
@@ -24,15 +24,15 @@ namespace CMG {
 		m_name = name;
 	}
 
-	const std::list<Class>& Namespace::getClasses() const {
+	const std::vector<Class>& Namespace::getClasses() const {
 		return m_classes;
 	}
 
-	const std::list<Function>& Namespace::getFunctions() const {
+	const std::vector<Function>& Namespace::getFunctions() const {
 		return m_functions;
 	}
 
-	const std::list<Namespace>& Namespace::getNamespaces() const {
+	const std::vector<Namespace>& Namespace::getNamespaces() const {
 		return m_namespaces;
 	}
 

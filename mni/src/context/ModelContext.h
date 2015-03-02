@@ -47,5 +47,19 @@ namespace mni {
 		std::list<ModelContext> getSectionItems(const std::string& sectionName) const;
 
 		const ModelContext* getParentContext() const;
+
+
+		//User defined functions
+		const CMG::Namespace& getNamespace() const;
+
+		const CMG::Class& getClass() const;
+
+		const CMG::Method& getMethod() const;
+
+		const CMG::Function& getFunction() const;
+
+		const CMG::Parameter& getParameter() const;
+
+		const CMG::Type& getType() const;
 	};
 }

@@ -1,7 +1,7 @@
 
 
 add_subdirectory(templateEngine)
-add_subdirectory(model)
+add_subdirectory(context)
 add_subdirectory(tools)
 
 set(SRC_LIST ${SRC_LIST}

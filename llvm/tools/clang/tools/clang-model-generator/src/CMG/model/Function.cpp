@@ -2,7 +2,7 @@
 
 namespace CMG {
 
-	Function::Function(Model& m, const std::string& usr) : m_model(m), m_usr(usr) {
+	Function::Function(Model& m, const std::string& usr) : m_model(&m), m_usr(usr) {
 	}
 
 	Function::~Function() {
@@ -24,7 +24,7 @@ namespace CMG {
 		m_name = name;
 	}
 
-	const std::list<Parameter>& Function::getParameters() const {
+	const std::vector<Parameter>& Function::getParameters() const {
 		return m_parameters;
 	}
 }

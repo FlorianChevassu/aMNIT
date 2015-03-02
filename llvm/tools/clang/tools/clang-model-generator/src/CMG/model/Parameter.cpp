@@ -2,7 +2,7 @@
 
 namespace CMG {
 
-	Parameter::Parameter(Model& m, const std::string& usr) : m_model(m), m_usr(usr) {
+	Parameter::Parameter(Model& m, const std::string& usr) : m_model(&m), m_usr(usr) {
 	}
 
 	Parameter::~Parameter() {

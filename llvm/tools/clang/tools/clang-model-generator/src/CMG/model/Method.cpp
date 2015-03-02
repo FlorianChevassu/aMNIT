@@ -2,7 +2,7 @@
 
 namespace CMG {
 
-	Method::Method(Model& m, const std::string& usr) : m_model(m), m_usr(usr), m_isCtor(false), m_isDtor(false) {
+	Method::Method(Model& m, const std::string& usr) : m_model(&m), m_usr(usr), m_isCtor(false), m_isDtor(false) {
 	}
 
 	Method::~Method() {
@@ -64,7 +64,7 @@ namespace CMG {
 		m_accessSpecifier = as;
 	}
 
-	const std::list<Parameter>& Method::getParameters() const {
+	const std::vector<Parameter>& Method::getParameters() const {
 		return m_parameters;
 	}
 

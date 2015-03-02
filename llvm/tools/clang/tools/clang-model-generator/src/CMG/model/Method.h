@@ -2,7 +2,6 @@
 
 #include <string>
 #include <vector>
-#include <list>
 #include <memory>
 
 
@@ -16,6 +15,8 @@ namespace CMG {
 	class Method {
 	public:
 		Method(Model& m, const std::string& usr);
+
+		Method& operator=(const Method& rhs) = default;
 
 		~Method();
 
@@ -47,12 +48,12 @@ namespace CMG {
 
 		void setAccessSpecifier(AccessSpecifier as);
 
-		CMG_API const std::list<Parameter>& getParameters() const;
+		CMG_API const std::vector<Parameter>& getParameters() const;
 
 		template<typename... T>
 		Parameter* addParameter(const std::string& usr, T... params) {
-			m_parameters.emplace_back(m_model, usr, params...);
-			m_model.addParameter(usr, &m_parameters.back());
+			m_parameters.emplace_back(*m_model, usr, params...);
+			m_model->addParameter(usr, &m_parameters.back());
 			return &m_parameters.back();
 		}
 
@@ -74,7 +75,7 @@ namespace CMG {
 
 
 	private:
-		Model& m_model;
+		Model* m_model;
 		std::string m_name;
 		std::string m_usr;
 		bool m_isFinal;
@@ -86,7 +87,7 @@ namespace CMG {
 
 		AccessSpecifier m_accessSpecifier;
 
-		std::list<Parameter> m_parameters;
+		std::vector<Parameter> m_parameters;
 		Type m_returnType;
 	};
 }

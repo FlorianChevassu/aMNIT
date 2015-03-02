@@ -14,7 +14,7 @@
 
 
 #include "scriptEngine.h"
-#include "../model/model.h"
+#include "../context/ModelContext.h"
 #include <chaiscript/utility/utility.hpp>
 
 namespace mni {
@@ -56,6 +56,22 @@ namespace mni {
 			m_scriptingEngine.registerClass<Context>("Context");
 			m_scriptingEngine.registerFunction(&Context::getValue, "getValue");
 			m_scriptingEngine.registerFunction(&Context::getParentContext, "getParentContext");
+		}
+
+		template<class C>
+		void registerClass(const std::string& className) {
+			m_scriptingEngine.registerClass<C>(className);
+		}
+
+
+		template<class T>
+		void registerFunction(const T& f, const std::string& funcName) {
+			m_scriptingEngine.registerFunction(f, funcName);
+		}
+
+		template<class T>
+		void registerVariable(T& v, const std::string& varName) {
+			registerVariable(v, varName);
 		}
 
 		template<class Context>
@@ -108,6 +124,8 @@ namespace mni {
 		void setTemplatePath(const boost::filesystem::path& p) {
 			m_templatePath = p;
 		}
+
+		script::ScriptEngine& getScriptEngine();
 
 	private:
 		std::string extractText(std::istream& is);

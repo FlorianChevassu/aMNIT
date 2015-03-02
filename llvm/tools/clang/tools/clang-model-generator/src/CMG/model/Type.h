@@ -10,6 +10,8 @@ namespace CMG {
 	public:
 		Type();
 
+		Type& operator=(const Type& rhs) = default;
+
 		~Type();
 
 		CMG_API bool isConst() const;

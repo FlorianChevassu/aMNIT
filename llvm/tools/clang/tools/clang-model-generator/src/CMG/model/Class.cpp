@@ -2,7 +2,7 @@
 
 namespace CMG {
 
-	Class::Class(Model& m, const std::string& usr) : m_model(m), m_usr(usr) {
+	Class::Class(Model& m, const std::string& usr) : m_model(&m), m_usr(usr) {
 	}
 
 	Class::~Class() {
@@ -32,7 +32,7 @@ namespace CMG {
 		m_isFinal = f;
 	}
 
-	const std::list<Method>& Class::getMethods() const {
+	const std::vector<Method>& Class::getMethods() const {
 		return m_methods;
 	}
 

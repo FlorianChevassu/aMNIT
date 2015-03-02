@@ -51,5 +51,5 @@ ExternalProject_Add(
     LOG_BUILD ON
 )
 ExternalProject_Get_Property(ChaiScript SOURCE_DIR)
-include_directories(${SOURCE_DIR}/include)
+include_directories(SYSTEM ${SOURCE_DIR}/include)
 add_dependencies(MNI ChaiScript)

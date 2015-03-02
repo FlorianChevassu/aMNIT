@@ -242,4 +242,8 @@ namespace mni {
 
 		return {NodeType::var, key, tags};
 	}
+
+	script::ScriptEngine& TemplateEngine::getScriptEngine() {
+		return m_scriptingEngine;
+	}
 }
